@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#061711" />
+  <title>Siam — The Birthday Universe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --forest:#071b13; --emerald:#153d2d; --gold:#d9c18a; --cream:#f5f1e7; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:#050d0a; color:var(--cream); font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+    .serif { font-family:'Cormorant Garamond',serif; }
+    .scene { position:fixed; inset:0; z-index:-5; overflow:hidden; background:radial-gradient(ellipse at 50% 35%,#1d4935 0%,#0a2118 42%,#030806 100%); }
+    .forest-glow { position:absolute; inset:-20%; background:radial-gradient(ellipse at 50% 35%,rgba(191,218,153,.18),transparent 24%),radial-gradient(ellipse at 15% 55%,rgba(32,104,68,.23),transparent 28%),radial-gradient(ellipse at 85% 48%,rgba(21,82,53,.2),transparent 30%); animation:breath 9s ease-in-out infinite alternate; }
+    .beam { position:absolute; top:-25%; left:48%; width:22%; height:95%; background:linear-gradient(180deg,rgba(237,238,184,.17),rgba(188,218,157,.055),transparent); filter:blur(22px); transform:rotate(16deg); clip-path:polygon(40% 0,70% 0,100% 100%,0 100%); }
+    .beam.b2 { left:27%; width:12%; opacity:.45; transform:rotate(-19deg); }
+    .trunk { position:absolute; bottom:-8%; width:13%; height:120%; background:linear-gradient(90deg,#020604,#0a1c13 48%,#020604); filter:blur(1px); opacity:.82; clip-path:polygon(24% 0,75% 0,100% 100%,0 100%); }
+    .trunk.left { left:-5%; transform:rotate(4deg); }
+    .trunk.left2 { left:12%; width:7%; opacity:.55; transform:rotate(-5deg); }
+    .trunk.right { right:-5%; transform:rotate(-3deg); }
+    .trunk.right2 { right:15%; width:8%; opacity:.55; transform:rotate(6deg); }
+    .vignette { position:absolute; inset:0; background:radial-gradient(ellipse at center,transparent 18%,rgba(0,0,0,.35) 72%,rgba(0,0,0,.83) 120%); }
+    .firefly { position:absolute; width:4px; height:4px; border-radius:50%; background:#e8e8a1; box-shadow:0 0 8px 3px rgba(215,236,131,.48),0 0 24px rgba(178,226,121,.5); animation:float 8s ease-in-out infinite, flicker 2.8s ease-in-out infinite; }
+    .portal-ring { position:relative; width:clamp(170px,24vw,270px); aspect-ratio:1; border:1px solid rgba(222,208,151,.6); border-radius:50%; box-shadow:0 0 28px rgba(144,202,136,.12),inset 0 0 32px rgba(140,210,144,.12); background:radial-gradient(circle,rgba(116,179,121,.15),rgba(6,22,15,.06) 54%,transparent 72%); animation:portal 7s linear infinite; }
+    .portal-ring:before,.portal-ring:after { content:""; position:absolute; inset:13px; border:1px solid rgba(167,211,159,.32); border-radius:50%; }
+    .portal-ring:after { inset:28px; border-style:dashed; border-color:rgba(222,208,151,.35); animation:portal 20s linear infinite reverse; }
+    .portal-core { position:absolute; inset:25%; border-radius:50%; background:radial-gradient(circle,rgba(201,230,170,.65),rgba(43,111,72,.35) 36%,rgba(5,24,15,.7) 72%); filter:blur(.4px); box-shadow:0 0 60px rgba(133,205,131,.35); }
+    .glass { background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); border:1px solid rgba(224,223,186,.16); box-shadow:0 18px 70px rgba(0,0,0,.18); backdrop-filter:blur(18px); }
+    .gold { color:var(--gold); }
+    .eyebrow { letter-spacing:.28em; text-transform:uppercase; font-size:.65rem; color:#c6c6a2; }
+    .section { padding:100px 0; position:relative; }
+    .section-title { font-size:clamp(2.5rem,6vw,5rem); line-height:.94; letter-spacing:-.035em; }
+    .pill { border:1px solid rgba(217,193,138,.42); color:#eadbb5; transition:.3s ease; }
+    .pill:hover { background:rgba(217,193,138,.13); border-color:rgba(217,193,138,.8); transform:translateY(-2px); }
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .8s ease,transform .8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .photo-frame { position:relative; border:1px solid rgba(217,193,138,.45); padding:10px; background:rgba(255,255,255,.035); }
+    .photo-frame:before { content:""; position:absolute; inset:5px; border:1px solid rgba(217,193,138,.14); pointer-events:none; }
+    .photo-frame img { width:100%; height:100%; min-height:340px; object-fit:cover; display:block; filter:saturate(.82); }
+    .star { position:absolute; width:7px; height:7px; border-radius:50%; background:#e8dcaa; box-shadow:0 0 12px 3px rgba(216,202,134,.55); cursor:pointer; transition:transform .3s,box-shadow .3s; animation:twinkle 3s ease-in-out infinite; }
+    .star:hover { transform:scale(1.8); box-shadow:0 0 24px 8px rgba(216,202,134,.55); }
+    .letter-paper { background:#e9e1ce; color:#26372a; border-radius:3px; box-shadow:0 25px 80px rgba(0,0,0,.35); }
+    .envelope { width:min(100%,340px); aspect-ratio:1.45; position:relative; cursor:pointer; perspective:900px; margin:auto; }
+    .envelope-body { position:absolute; inset:0; background:linear-gradient(145deg,#c9b98b,#8d9b70); clip-path:polygon(0 0,100% 0,100% 100%,0 100%); border-radius:5px; box-shadow:0 22px 50px rgba(0,0,0,.35); }
+    .envelope-flap { position:absolute; top:0; left:0; width:100%; height:70%; background:linear-gradient(145deg,#e0d0a6,#a7ae7e); clip-path:polygon(0 0,100% 0,50% 100%); transform-origin:top; transition:transform .85s ease; z-index:3; filter:drop-shadow(0 4px 4px rgba(0,0,0,.1)); }
+    .envelope.open .envelope-flap { transform:rotateX(180deg); }
+    .envelope-seal { position:absolute; z-index:4; left:50%; top:42%; transform:translate(-50%,-50%); width:42px;height:42px;border-radius:50%;background:#294b37;color:#e8d9a9;display:grid;place-items:center;border:1px solid #d9c18a;transition:opacity .3s; }
+    .envelope.open .envelope-seal { opacity:0; }
+    .memory-card { transition:transform .3s,border-color .3s; }
+    .memory-card:hover { transform:translateY(-5px); border-color:rgba(217,193,138,.5); }
+    .firework { position:fixed; z-index:100; pointer-events:none; width:5px;height:5px;border-radius:50%; background:#e7d59b; box-shadow:0 0 12px #e7d59b; animation:burst 1.4s ease-out forwards; }
+    .secret { opacity:0; max-height:0; overflow:hidden; transition:all .8s ease; }
+    .secret.unlocked { opacity:1; max-height:300px; margin-top:1.5rem; }
+    @keyframes float { 0%,100%{transform:translate(0,0)} 50%{transform:translate(28px,-36px)} }
+    @keyframes flicker { 0%,100%{opacity:.25} 45%{opacity:1} 70%{opacity:.5} }
+    @keyframes twinkle { 0%,100%{opacity:.35} 50%{opacity:1} }
+    @keyframes portal { to{transform:rotate(360deg)} }
+    @keyframes breath { to{transform:scale(1.08);opacity:.75} }
+    @keyframes burst { 0%{transform:translate(0,0) scale(.4);opacity:1} 100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0} }
+    @media(max-width:640px){ .section{padding:72px 0}.beam{left:40%;width:34%}.trunk.left2{left:7%}.trunk.right2{right:8%} }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <div class="forest-glow"></div><div class="beam"></div><div class="beam b2"></div>
+    <div class="trunk left"></div><div class="trunk left2"></div><div class="trunk right"></div><div class="trunk right2"></div>
+    <div class="vignette"></div><div id="fireflies"></div>
+  </div>
+
+  <audio id="ambientMusic" loop preload="none">
+    <!-- Add your own royalty-free ambient music file as assets/forest-ambience.mp3 -->
+    <source src="assets/forest-ambience.mp3" type="audio/mpeg">
+  </audio>
+
+  <header class="fixed top-0 left-0 right-0 z-40 px-5 md:px-10 py-5 flex items-center justify-between">
+    <a href="#celebration" class="serif text-xl tracking-wide text-white/90">S<span class="gold">.</span></a>
+    <div class="flex items-center gap-3">
+      <button id="musicToggle" class="pill rounded-full px-4 py-2 text-xs tracking-widest uppercase" aria-pressed="false">♫ Sound off</button>
+      <a href="#universe" class="text-xs uppercase tracking-[.22em] text-white/65 hover:text-white transition">Explore ↗</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="celebration" class="section px-5">
+      <div class="max-w-6xl mx-auto grid md:grid-cols-[1fr_.85fr] gap-12 md:gap-20 items-center">
+        <div class="reveal">
+          <p class="eyebrow mb-5">Scene 01 · The celebration</p>
+          <h2 class="serif section-title">A new year<br>of <span class="gold italic">being me.</span></h2>
+          <p class="mt-7 text-white/65 leading-7 max-w-lg">Siam, become the person you want to be. May Allah fulfill all your honest wishes. Just remember one thing: time has not run out yet. Keep learning, keep building, and keep moving forward, one honest step at a time.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <button id="fireworksBtn" class="pill rounded-full px-6 py-3 text-xs uppercase tracking-widest">Make a wish ✦</button>
+            <button id="scrollStars" class="pill rounded-full px-6 py-3 text-xs uppercase tracking-widest">Explore the stars ↓</button>
+          </div>
+        </div>
+        <div class="relative reveal">
+          <div class="photo-frame max-w-md mx-auto">
+            <img src="assets/siam.png" alt="Siam" onerror="this.onerror=null;this.style.display='none';this.parentElement.querySelector('.photo-fallback').style.display='flex';">
+            <div class="photo-fallback hidden min-h-[340px] items-center justify-center text-center p-8 bg-emerald-950/70">
+              <div><div class="serif text-5xl gold mb-3">S.</div><p class="text-sm text-white/65">Place your photo at<br><code class="text-xs">assets/siam.png</code></p></div>
+            </div>
+          </div>
+          <p class="text-center text-xs uppercase tracking-[.25em] text-white/45 mt-5">The person behind this universe</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="universe" class="section px-5">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center reveal">
+          <p class="eyebrow mb-5">Scene 02 · Choose a star</p>
+          <h2 class="serif section-title">My own little <span class="gold italic">universe.</span></h2>
+          <p class="text-white/55 mt-5 max-w-xl mx-auto leading-7">Every star opens a different part of the story. Explore them one by one.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+          <button class="memory-card glass rounded-2xl p-6 text-left reveal" data-modal="progress"><span class="gold text-2xl">✧</span><h3 class="serif text-2xl mt-5">My Progress</h3><p class="text-sm text-white/50 mt-2 leading-6">Small wins that show I’m moving forward.</p><span class="block mt-5 text-xs uppercase tracking-widest gold">Open star ↗</span></button>
+          <button class="memory-card glass rounded-2xl p-6 text-left reveal" data-modal="achievements"><span class="gold text-2xl">✦</span><h3 class="serif text-2xl mt-5">Achievements</h3><p class="text-sm text-white/50 mt-2 leading-6">60/60, CGPA 3.68, and steady effort.</p><span class="block mt-5 text-xs uppercase tracking-widest gold">Open star ↗</span></button>
+          <button class="memory-card glass rounded-2xl p-6 text-left reveal" data-modal="dreams"><span class="gold text-2xl">✺</span><h3 class="serif text-2xl mt-5">Next Chapter</h3><p class="text-sm text-white/50 mt-2 leading-6">Build projects, grow my skills, earn my first income.</p><span class="block mt-5 text-xs uppercase tracking-widest gold">Open star ↗</span></button>
+          <button class="memory-card glass rounded-2xl p-6 text-left reveal" data-modal="learning"><span class="gold text-2xl">☼</span><h3 class="serif text-2xl mt-5">What I’m Learning</h3><p class="text-sm text-white/50 mt-2 leading-6">Web development, CSE, and building useful skills.</p><span class="block mt-5 text-xs uppercase tracking-widest gold">Open star ↗</span></button>
+        </div>
+        <div class="mt-12 glass rounded-3xl p-7 md:p-10 reveal">
+          <div class="grid md:grid-cols-[.8fr_1.2fr] gap-8 items-center">
+            <div><p class="eyebrow mb-4">Constellation · 2026—2027</p><h3 class="serif text-3xl md:text-4xl">The next chapter<br><span class="gold italic">is still unwritten.</span></h3><p class="text-white/55 text-sm leading-6 mt-4">From three perfect 60/60 scores to a 3.68 semester CGPA—every honest effort is part of the constellation. Next: stronger skills, personal projects, and a first income.</p></div>
+            <div class="relative min-h-[190px] rounded-2xl bg-black/15 overflow-hidden" id="constellation">
+              <svg viewBox="0 0 500 220" class="absolute inset-0 w-full h-full" aria-label="Constellation illustration">
+                <g stroke="rgba(217,193,138,.38)" stroke-width="1" fill="none"><path d="M52 135 L132 55 L218 105 L302 37 L385 88 L452 45"/><path d="M132 55 L150 170 L218 105 L275 175 L385 88"/></g>
+                <g fill="#e9dda9"><circle cx="52" cy="135" r="3"/><circle cx="132" cy="55" r="5"/><circle cx="218" cy="105" r="4"/><circle cx="302" cy="37" r="5"/><circle cx="385" cy="88" r="4"/><circle cx="452" cy="45" r="3"/><circle cx="150" cy="170" r="3"/><circle cx="275" cy="175" r="3"/></g>
+              </svg>
+              <span class="absolute bottom-4 right-5 text-[10px] uppercase tracking-[.25em] text-white/35">Siam · Next Chapter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="letter" class="section px-5">
+      <div class="max-w-5xl mx-auto text-center">
+        <p class="eyebrow mb-5 reveal">Scene 03 · Dear Future Me</p>
+        <h2 class="serif section-title reveal">A letter across <span class="gold italic">time.</span></h2>
+        <p class="text-white/55 mt-5 mb-10 max-w-lg mx-auto leading-7 reveal">A little promise to the person I’ll be next year. Click the envelope to open it.</p>
+        <div class="envelope reveal" id="envelope" role="button" tabindex="0" aria-label="Open letter to future self">
+          <div class="envelope-body"></div>
+          <div class="absolute left-[7%] right-[7%] bottom-0 h-[78%] bg-[#f0e8d5] z-[1] rounded-t-sm"></div>
+          <div class="envelope-flap"></div>
+          <div class="envelope-seal">S</div>
+        </div>
+        <div id="letterContent" class="hidden max-w-2xl mx-auto mt-8 letter-paper p-7 md:p-12 text-left">
+          <p class="uppercase tracking-[.2em] text-xs text-[#687b58]">31 October · A note to my future self</p>
+          <h3 class="serif text-4xl mt-4 mb-5">Dear future me,</h3>
+          <p class="leading-7">This year, you earned full marks—60/60—three times in a row in Programming Hero’s Level 1 Web Development course, and achieved a 3.68 CGPA last semester. These are signs of your effort, but they are not your limit. You have also been trying to improve your coursework, academic classes, and personal growth. Remember that effort, too.</p>
+          <p class="leading-7 mt-4">You are learning HTML, Tailwind CSS, JavaScript, DOM, React, and WordPress development while continuing your CSE studies and building skills for your own projects and future income. You do not have to master everything in one day. Keep learning consistently, build your own projects, learn from mistakes, and take steady steps toward your first income.</p>
+          <p class="leading-7 mt-4">By your next birthday, I hope you will have stronger web development skills, created projects of your own, and made real progress toward earning your first income. Even if everything does not go exactly as planned, never underestimate your honest effort.</p>
+          <p class="serif italic text-2xl mt-7">Siam, become the person you want to be.<br>May Allah fulfill all your honest wishes.<br>Remember: time has not run out yet.</p>
+          <p class="text-xs mt-8 text-[#687b58]">From the Siam who is still learning, to the Siam who will keep growing.</p>
+        </div>
+        <p class="text-xs uppercase tracking-[.2em] text-white/35 mt-8 reveal">Open this letter on your next birthday, too.</p>
+      </div>
+    </section>
+
+    <section id="secretRoom" class="section px-5">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="eyebrow mb-5 reveal">Scene 04 · The secret room</p>
+        <h2 class="serif section-title reveal">Not everything is <span class="gold italic">visible.</span></h2>
+        <p class="text-white/55 mt-5 leading-7 reveal">Somewhere in this forest, there’s a little secret. Look closely at the tiny golden mark below.</p>
+        <button id="secretBtn" class="mt-8 w-12 h-12 rounded-full border border-[#d9c18a]/40 text-[#d9c18a] hover:bg-[#d9c18a]/10 transition" aria-label="Unlock secret room">✦</button>
+        <div id="secretMessage" class="secret glass rounded-2xl p-7 max-w-xl mx-auto">
+          <p class="eyebrow mb-3">You found it.</p>
+          <p class="serif text-3xl gold">A quiet reminder</p>
+          <p class="text-white/70 leading-7 mt-4">Siam, become the person you want to be. May Allah fulfill all your honest wishes. Just remember: time has not run out yet.</p>
+          <div class="serif text-2xl mt-5">✧ This is only the beginning. ✧</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="px-5 py-12 text-center border-t border-white/10">
+      <div class="serif text-3xl">S<span class="gold">.</span></div>
+      <p class="eyebrow mt-3">Made for myself · 31 October</p>
+      <p class="text-xs text-white/35 mt-5">Siam’s universe · Built with effort, hope, and honest wishes.</p>
+    </footer>
+  </main>
+
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-black/75 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="glass rounded-3xl p-7 md:p-10 max-w-lg w-full max-h-[85vh] overflow-y-auto relative">
+      <button id="closeModal" class="absolute top-4 right-5 text-2xl text-white/60 hover:text-white" aria-label="Close">×</button>
+      <p class="eyebrow mb-4">A star in my universe</p><h3 id="modalTitle" class="serif text-4xl gold"></h3>
+      <div id="modalBody" class="text-white/70 leading-7 mt-5"></div>
+      <p class="text-xs text-white/35 mt-7">Every honest effort is part of the journey.</p>
+    </div>
+  </div>
+
+  <script>
+    // Personal birthday universe, personalised with Siam’s provided details.
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+    // Gentle forest fireflies
+    const flyWrap = $('#fireflies');
+    for (let i = 0; i < 34; i++) {
+      const fly = document.createElement('span');
+      fly.className = 'firefly';
+      fly.style.left = `${Math.random() * 100}%`;
+      fly.style.top = `${12 + Math.random() * 78}%`;
+      fly.style.animationDelay = `${Math.random() * -8}s, ${Math.random() * -3}s`;
+      fly.style.animationDuration = `${6 + Math.random() * 7}s, ${1.8 + Math.random() * 2.5}s`;
+      const size = 2 + Math.random() * 3;
+      fly.style.width = `${size}px`; fly.style.height = `${size}px`;
+      flyWrap.appendChild(fly);
+    }
+
+    // Reveal sections as they enter view
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}
+    }), {threshold:.12});
+    $$('.reveal').forEach(el => { if(!el.classList.contains('visible')) observer.observe(el); });
+
+    // Music toggle; user must add their own audio file to assets/forest-ambience.mp3.
+    let musicOn = false;
+    $('#musicToggle').addEventListener('click', async () => {
+      const audio = $('#ambientMusic');
+      if(!musicOn){
+        try { await audio.play(); musicOn=true; $('#musicToggle').textContent='♫ Sound on'; $('#musicToggle').setAttribute('aria-pressed','true'); }
+        catch(e){ $('#musicToggle').textContent='♫ Add music file'; }
+      } else {
+        audio.pause(); musicOn=false; $('#musicToggle').textContent='♫ Sound off'; $('#musicToggle').setAttribute('aria-pressed','false');
+      }
+    });
+
+    // Firework finale
+    function fireworks() {
+      const cx = window.innerWidth * (.25 + Math.random() * .5);
+      const cy = window.innerHeight * (.18 + Math.random() * .35);
+      for(let i=0;i<48;i++){
+        const p=document.createElement('i');p.className='firework';
+        p.style.left=`${cx}px`;p.style.top=`${cy}px`;
+        const angle=Math.PI*2*i/48, distance=55+Math.random()*105;
+        p.style.setProperty('--dx',`${Math.cos(angle)*distance}px`);
+        p.style.setProperty('--dy',`${Math.sin(angle)*distance}px`);
+        document.body.appendChild(p);setTimeout(()=>p.remove(),1500);
+      }
+    }
+    $('#fireworksBtn').addEventListener('click', () => { fireworks(); setTimeout(fireworks,350); });
+    $('#scrollStars').addEventListener('click', () => $('#universe').scrollIntoView({behavior:'smooth'}));
+
+    // Star content modal — personalised with Siam's provided details.
+    const starContent = {
+      progress: ['My Progress', '<strong>Programming Hero · Level 1 Web Development</strong><br>Three consecutive full marks: <strong>60/60</strong> each time.<br><br><strong>Academics</strong><br>Last semester CGPA: <strong>3.68</strong>.<br><br>Trying to improve course work, academic classes, and self-improvement compared with before.'],
+      achievements: ['Achievements', '<strong>60/60 × 3</strong><br>Earned full marks three times in a row in Programming Hero Level 1 Web Development.<br><br><strong>CGPA 3.68</strong><br>Achieved in the last semester.<br><br>These are milestones in progress—not a reason to stop growing.'],
+      dreams: ['Next Chapter', '<strong>01 · Grow my skills</strong><br>Become more skilled in web development.<br><br><strong>02 · Build</strong><br>Create my own projects.<br><br><strong>03 · First income</strong><br>Work towards earning my first income.'],
+      learning: ['What I’m Learning', 'HTML · Tailwind CSS · JavaScript · DOM · React · WordPress development<br><br>Alongside web development, I’m continuing my CSE studies and building skills for personal projects and future income.']
+    };
+    $$('.memory-card').forEach(card => card.addEventListener('click', () => {
+      const [title,body] = starContent[card.dataset.modal];
+      $('#modalTitle').textContent=title; $('#modalBody').innerHTML=body;
+      $('#modal').classList.remove('hidden');$('#modal').classList.add('flex');
+    }));
+    function closeModal(){ $('#modal').classList.add('hidden');$('#modal').classList.remove('flex'); }
+    $('#closeModal').addEventListener('click',closeModal);
+    $('#modal').addEventListener('click',e=>{if(e.target===$('#modal'))closeModal();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+    // Future-self envelope
+    function openLetter(){ $('#envelope').classList.add('open');setTimeout(()=>$('#letterContent').classList.remove('hidden'),430); }
+    $('#envelope').addEventListener('click',openLetter);
+    $('#envelope').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLetter();}});
+
+    // Secret room Easter egg
+    let secretClicks=0;
+    $('#secretBtn').addEventListener('click',()=>{
+      secretClicks++;
+      if(secretClicks>=3){$('#secretMessage').classList.add('unlocked');fireworks();}
+      else {$('#secretBtn').style.transform=`rotate(${secretClicks*45}deg) scale(${1+secretClicks*.08})`;}
+    });
+  </script>
+</body>
+</html>
